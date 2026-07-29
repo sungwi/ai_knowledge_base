@@ -3,9 +3,17 @@ import { readVaultFile } from "../lib/vault-reader";
 export default async function Home() {
 
   try {
-    const content = await readVaultFile("ChatGPT/test.md");
+    const {frontmatter, content} = await readVaultFile("ChatGPT/test.md");
     return (
       <main>
+        <h1>{frontmatter.title ?? "タイトルなし"}</h1>
+        <div>
+          <p>{String(frontmatter.created) ?? "日付不明"}</p>
+          <ul>
+            {(frontmatter.tags ?? []).map((tag:string)=>
+            (<li key={tag}>{tag}</li>))}
+          </ul>
+        </div>
         <p>{content}</p>
       </main>
     );
