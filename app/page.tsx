@@ -1,17 +1,22 @@
+import { validateMetadata } from "@/application/validation/validateMetadata";
 import { readVaultFile } from "../lib/vault-reader";
 
 export default async function Home() {
 
   try {
-    const {frontmatter, content} = await readVaultFile("ChatGPT/test.md");
+    const {frontmatter, content} = await readVaultFile("ChatGPT/tests.md");
+    console.log(frontmatter);
+    const validatedFrontmatter = validateMetadata(frontmatter);
+    console.log(validatedFrontmatter);
+    const {title, created, keywords} = validatedFrontmatter;
     return (
       <main>
-        <h1>{frontmatter.title ?? "タイトルなし"}</h1>
+        <h1>{title}</h1>
         <div>
-          <p>{String(frontmatter.created) ?? "日付不明"}</p>
+          <p>{created.toLocaleDateString()}</p>
           <ul>
-            {(frontmatter.tags ?? []).map((tag:string)=>
-            (<li key={tag}>{tag}</li>))}
+            {(keywords).map((keyword:string)=>
+            (<li key={keyword}>{keyword}</li>))}
           </ul>
         </div>
         <p>{content}</p>
